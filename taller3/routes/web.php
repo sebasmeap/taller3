@@ -20,6 +20,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/inscritos',
         [PaginaController::class, 'inscritos']);
 
+    Route::get('/atletas/{id}/edit',
+        [PqrsController::class, 'edit'])
+            ->name('atletas.edit');
+
+    Route::delete('/atletas/{id}',
+        [PqrsController::class, 'destroy'])
+            ->name('atletas.destroy');
+
+    Route::put('/actualizar-atleta/{id}',
+        [PqrsController::class, 'update'])
+            ->name('atletas.update');
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware(['verified'])->name('dashboard');

@@ -42,6 +42,20 @@
             Escuela de Fútbol La Cantera
         </h2>
 
+        @if(session('success'))
+
+        <div style="
+            background:#22c55e;
+            color:white;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:20px;
+        ">
+            {{ session('success') }}
+        </div>
+
+        @endif
+
         @if($atletas->isEmpty())
 
             <div style="
@@ -59,11 +73,13 @@
 
         <div style="overflow-x:auto;">
 
-            <table style="
+            <table id="tabla-atletas" style="
                 width:100%;
                 border-collapse:separate;
                 border-spacing:0 15px;
             ">
+
+                <thead>
 
                 <tr style="
                     background:#22c55e;
@@ -71,7 +87,9 @@
                     text-align:left;
                 ">
 
-                    <th style="padding:18px; border-top-left-radius:14px; border-bottom-left-radius:14px;">Nombres</th>
+                    <th style="padding:18px; border-top-left-radius:14px; border-bottom-left-radius:14px;">
+                        Nombres
+                    </th>
 
                     <th style="padding:18px;">Apellidos</th>
 
@@ -85,9 +103,19 @@
 
                     <th style="padding:18px;">Ciudad</th>
 
-                    <th style="padding:18px; border-top-right-radius:14px; border-bottom-right-radius:14px;">Categoría</th>
+                    <th style="padding:18px;">Categoría</th>
+
+                    <th style="padding:18px;">Actualizar</th>
+
+                    <th style="padding:18px; border-top-right-radius:14px; border-bottom-right-radius:14px;">
+                        Eliminar
+                    </th>
 
                 </tr>
+
+                </thead>
+
+                <tbody>
 
                 @foreach($atletas as $atleta)
 
@@ -131,17 +159,64 @@
 
                     <td style="
                         padding:20px;
-                        border-top-right-radius:14px;
-                        border-bottom-right-radius:14px;
                         color:#22c55e;
                         font-weight:bold;
                     ">
                         {{ $atleta->categoria }}
                     </td>
 
+                    <td style="padding:20px;">
+
+                        <a href="{{ route('atletas.edit', $atleta->id) }}"
+                        style="
+                            background:#3b82f6;
+                            color:white;
+                            padding:10px 15px;
+                            border-radius:10px;
+                            text-decoration:none;
+                            font-weight:bold;
+                        ">
+                            Actualizar
+                        </a>
+
+                    </td>
+
+                    <td style="
+                        padding:20px;
+                        border-top-right-radius:14px;
+                        border-bottom-right-radius:14px;
+                    ">
+
+                        <form 
+                        action="{{ route('atletas.destroy', $atleta->id) }}"
+                        method="POST"
+                        onsubmit="return confirm('¿Seguro que deseas eliminar este registro?')">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit"
+                            style="
+                                background:#ef4444;
+                                color:white;
+                                padding:10px 15px;
+                                border:none;
+                                border-radius:10px;
+                                cursor:pointer;
+                                font-weight:bold;
+                            ">
+                                Eliminar
+                            </button>
+
+                        </form>
+
+                    </td>
+
                 </tr>
 
                 @endforeach
+
+                </tbody>
 
             </table>
 
@@ -152,5 +227,30 @@
     </div>
 
 </div>
+
+<link rel="stylesheet"
+href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#tabla-atletas').DataTable({
+
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+        },
+
+        pageLength: 5
+
+    });
+
+});
+
+</script>
 
 @endsection

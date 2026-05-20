@@ -39,6 +39,43 @@ class PqrsController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect('/inscripcion')->with('success', 'Inscripción realizada correctamente');
+        return redirect('/inscripcion')
+            ->with('success', 'Inscripción realizada correctamente');
+    }
+
+    public function edit($id)
+    {
+        $atleta = DB::table('atletas')
+            ->where('id', $id)
+            ->first();
+
+        return view('editar', compact('atleta'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        DB::table('atletas')
+            ->where('id', $id)
+            ->update([
+
+                'nombres' => $request->nombres,
+                'apellidos' => $request->apellidos,
+                'edad' => $request->edad,
+                'updated_at' => now(),
+
+            ]);
+
+        return redirect('/inscritos')
+            ->with('success', 'Registro actualizado correctamente');
+    }
+
+    public function destroy($id)
+    {
+        DB::table('atletas')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect('/inscritos')
+            ->with('success', 'Registro eliminado correctamente');
     }
 }
